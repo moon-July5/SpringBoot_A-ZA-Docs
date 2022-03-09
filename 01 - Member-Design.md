@@ -204,6 +204,58 @@ public class MainController {
 그리고 `@Log4j2`로 요청한 페이지로 이동시 로그에 기록하도록 했습니다.  
 마지막으로 `회원가입(signup.html)` 페이지로 이동하도록 경로를 반환하도록 하였습니다.  
 
+# SecurityConfig 구현
+웹 브라우저에서 `회원가입(signup.html)` 페이지를 요청하기 전에 먼저 Security 관련 설정을 해줘야 합니다.
+왜냐하면, `build.gradle`에 `dependencies`의 `spring-boot-starter-security` 패키지 때문에 기본적으로 인증 없이는 접근할 수 없습니다.  
+그래서 아래와 같이 Security 설정을 해줘야 합니다.
+```java
+package com.moon.aza.config;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+@Log4j2
+@RequiredArgsConstructor
+@EnableWebSecurity // spring security 설정 클래스 선언
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    // static 폴더의 하위 목록들 인증 무시
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+       web.ignoring().antMatchers("/css/**","/js/**","/font/**","/imgs/**");
+    }
+
+    // http 요청에 대한 웹 기반 보안
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()    // 접근 제한
+                .antMatchers("/","/board","/login","/signup",
+                        "/member/email-check-token"
+                        ).permitAll(); // 특정 경로 지정, 접근을 설정
+       
+          
+    }
+}
+```
+이 `SecurityConfig` 클래스에 시큐리티 관련 기능을 쉽게 설정하기 위해 `WebSecurityConfigurerAdapter`라는 클래스를 상속으로 처리합니다.  
+그리고 `configure()` 메서드 중에서 `HttpSecurity` 타입을 parameter로 받는 메서드를 `override`해서 접근 제한을 처리할 수 있습니다.  
+`authorizeRequests()`로 인증이 필요한 자원들을 설정할 수 있고, `antMatchere()`는 `**/*`와 같은 **앤트 스타일의 패턴**으로 원하는 자원을 선택할 수 있습니다.  
+`permitAll()`는 말 그대로 모든 사용자에게 허락한다는 의미입니다.  
+
+정적인 자원으로 요청이 왔을 때 바로 응답할 수 있게 준비된 자원이라는 의미인 `static resource`는 보통 이미지 파일이나 템플릿 파일들이 이에 해당합니다.  
+여기서 `static resource`를 접근할 때 인증하지 않아도 되도록 설정을 추가해야 이미지가 깨지지 않고 출력이 됩니다.  
+이를 위해 `configure()` 메서드 중에서 `WebSecurity` 타입을 parameter로 받는 메서드를 `override`해서 해당하는 위치에 대해 무시하도록 설정합니다.  
+
+
+
+
 # 회원가입(signup.html) 페이지
 웹 브라우저에서 `http://localhost:8080/signup` 로 요청 시 아래와 같이 회원가입 페이지가 나오게 됩니다.  
 ![signup-1](https://user-images.githubusercontent.com/60730405/157450335-bad8cb4e-df62-47e3-a810-a66be8a6ce1b.JPG)
