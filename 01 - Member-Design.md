@@ -205,7 +205,9 @@ public class MainController {
 마지막으로 `회원가입(signup.html)` 페이지로 이동하도록 경로를 반환하도록 하였습니다.  
 
 # 회원가입(signup.html) 페이지
-웹 브라우저에서 `http://localhost:8080/signup` 로 요청 시 아래와 같이 회원가입 페이지가 나오게 됩니다.
+웹 브라우저에서 `http://localhost:8080/signup` 로 요청 시 아래와 같이 회원가입 페이지가 나오게 됩니다.  
+![signup-1](https://user-images.githubusercontent.com/60730405/157450335-bad8cb4e-df62-47e3-a810-a66be8a6ce1b.JPG)
+
 
 
 
