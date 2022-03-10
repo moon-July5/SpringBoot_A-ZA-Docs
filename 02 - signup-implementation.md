@@ -206,7 +206,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 }
 ```
 `@Repository`로 `Repository` 계층임을 나타냅니다.  
-상속받은 `JpaRepository`는 인터페이스이며, 이것은 상속받은 것만으로 모든 작업이 끝납니다. 
+상속받은 `JpaRepository`는 인터페이스이며, 이것은 상속받은 것만으로 모든 작업이 끝납니다.   
 상속받을 때 형식은 `JpaRepository<객체, @ID 타입>` 입니다.  
 
 다음은 아까 `Service` 계층에서 회원정보를 저장할 때, 이메일 인증용 토큰도 저장했는데, 이에 대해서 `Member` Entity를 조금 수정하겠습니다.  
@@ -253,7 +253,8 @@ public class Member extends BaseEntity {
 이메일 인증용 토큰을 생성하기 위해 **범용 고유 식별자**인 `UUID(Universally Unique Identifier)`로 생성합니다.  
 실제 사용시에 중복될 가능성이 없기 때문에 사용합니다.  
 
-이것으로 회원가입 처리를 구현했습니다.  
+이것으로 회원가입을 처리하는 기능을 완료했습니다.  
+다음에는 회원가입을 하기전에 유효성을 검사하는 기능을 더 추가해보겠습니다.
 
 
 
