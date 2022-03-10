@@ -55,7 +55,7 @@ public class Member extends BaseEntity {
 클래스위에 `Annotation`들이 있는데, 먼저 아래서부터 차례대로 설명하겠습니다. 
 
 
-`@Entity`은 클래스 위에 선언하게 되면, 이 클래스는 Entity임을 알려줍니다. 이렇게 되면 JAP가 관리하게 되며,   
+`@Entity`은 클래스 위에 선언하게 되면, 이 클래스는 Entity임을 알려줍니다. 이렇게 되면 J가 관리하게 되며,   
 정의된 필드들을 바탕으로  Database에서 테이블을 만들어 줍니다.  
 
 `@AllArgsConstructor(access = AccessLevel.PROTECTED)`와 `@NoArgsConstructor(access = AccessLevel.PROTECTED)`은 각각 선언된 모든 필드를 parameter로
