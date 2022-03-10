@@ -60,8 +60,8 @@ public class MainController {
 }
 ```
 위와 같이 수정해주며, 웹 브라우저에서 `/signup`을 요청 시, ccontroller가 호출되면서 `SignUpForm`이라는 객체를 생성해서 `Model`을 통해 전달해줍니다.
-그리고 `/aza/signup` 페이지로 redirect 해줍니다.
-그러면서 `signup.html`도 수정해줍니다.  
+그리고 `/aza/signup` 페이지로 redirect 해줍니다.  
+이제 `signup.html`도 수정해줍니다.  
 
 ## 회원가입(signup.html) 페이지 수정
 ```html
