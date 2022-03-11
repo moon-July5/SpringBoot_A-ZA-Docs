@@ -190,5 +190,119 @@ public class SignUpForm {
 다음에 할 것은 이메일과 닉네임의 중복 여부를 확인하는 것을 해보겠습니다.
 ***
 
+지금까지는 회원정보 양식에 맞게 작성하지 않으면 에러를 발생시키도록 하였습니다.  
+이번에 할 것은 이메일과 닉네임의 중복 여부를 확인하도록 검사해봐야 합니다.  
 
+닉네임이나 이메일같은 경우는 Database에 이미 등록한 사용자가 있는지 찾아봐야 합니다.  
+그래서 따로 검증하는 SignUpForm class를 만들겠습니다.  
+
+## SignUpFormValidator 구현
+```java
+package com.moon.aza.validator;
+
+import com.moon.aza.dto.SignUpForm;
+import com.moon.aza.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+@RequiredArgsConstructor
+@Component
+public class SignUpFormValidator implements Validator {
+    private final MemberRepository memberRepository;
+
+    /* SignUpForm 일때만 검증 수행 */
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return clazz.isAssignableFrom(SignUpForm.class);
+    }
+    /* 검증 수행  */
+    @Override
+    public void validate(Object target, Errors errors) {
+        SignUpForm signUpForm = (SignUpForm) target;
+        // 중복 여부 체크
+        if(memberRepository.existsByEmail(signUpForm.getEmail())){
+            errors.rejectValue("email", "invalid.email", new Object[]{signUpForm.getEmail()},
+                    "이미 사용중인 이메일입니다.");
+        }
+        if(memberRepository.existsByNickname(signUpForm.getNickname())){
+            errors.rejectValue("nickname","invalid.nickname",new Object[]{signUpForm.getNickname()},
+                    "이미 사용중인 닉네임입니다.");
+        }
+    }
+}
+```
+Spring에서 제공하는 객체 검증용 인터페이스인 `Validator`를 상속받습니다.  
+`@Component`를 클래스 선언부 위에 설정하여 Spring에서 관리할 수 있게 Spring Bean 객체로 등록합니다.  
+여기서 `supports()`와 `validate()`를 `재정의(override)`합니다.  
+`supports()` 메서드는 인스턴스가 검증 대상 타입인지 확인하는 역할을 하므로 SignUpForm 일 때만 검증을 수행하도록 합니다.  
+그리고 `validate()` 메서드는 실질적인 검증 작업을 수행합니다. 여기서 이메일과 닉네임의 중복 여부흘 확인할 것이기 때문에  
+`target`을 검증할 타입인 `SignUpForm`으로 캐스팅해주고 `Repository`를 이용하여 중복 여부를 확인합니다.  
+만약, 중복일 경우 errors 객체에 어떤 field에 에러가 있는지 검사합니다.  
+
+## MemberRepository 수정
+```java
+package com.moon.aza.repository;
+
+import com.moon.aza.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    /* 이메일 중복 여부 확인 */
+    boolean existsByEmail(String email);
+
+    /* 닉네임 중복 여부 확인 */
+    boolean existsByNickname(String nickname);
+}
+```
+JPA가 자동으로 만들어주는 `쿼리 메서드`를 통해 이메일과 닉네임 중복 여부를 확인하는 메서드를 구현합니다.  
+
+## MemberController 수정
+package com.moon.aza.controller;
+
+import com.moon.aza.dto.SignUpForm;
+import com.moon.aza.entity.Member;
+import com.moon.aza.service.MemberService;
+import com.moon.aza.validator.SignUpFormValidator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Map;
+
+@Log4j2
+@RequiredArgsConstructor
+@Controller
+public class MemberController {
+    private final SignUpFormValidator signUpFormValidator;
+    private final MemberService memberService;
+
+    ... 생략
+
+    /* 객체 검증*/
+    @InitBinder("signUpForm") // attribute로 바인딩할 객체 지정
+    public void initBinder(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(signUpFormValidator);
+    }
+    
+    ... 생략
+
+}
+```
+`@InitBinder`로 attribute로 바인딩할 객체를 지정합니다.  
+`WebDataBinder`를 이용하여 전에 구현한 `SignUpFormValidator` 클래스를 추가하면 해당 클래스가 들어왔을 때  
+검증하는 로직을 추가할 필요가 없습니다.  
+즉, `@InitBinder`에 객체 `signUpform`를 지정했으며, 이렇게 되면 `WebDataBinder`가 `signUpform`라는 객체에 binding할 때, 검증을 수행합니다.  
+
+## 결과 
+이미 회원가입한 사용자와 같은 이메일과 닉네임으로 가입을 시도하게되면 메시지가 출력이 됩니다.  
+![signup-4](https://user-images.githubusercontent.com/60730405/157863576-53f67418-9e1e-475a-ad7c-e77ae63478e4.JPG)
 
