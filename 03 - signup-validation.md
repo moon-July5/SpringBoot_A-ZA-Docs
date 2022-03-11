@@ -261,6 +261,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 JPA가 자동으로 만들어주는 `쿼리 메서드`를 통해 이메일과 닉네임 중복 여부를 확인하는 메서드를 구현합니다.  
 
 ## MemberController 수정
+```java
 package com.moon.aza.controller;
 
 import com.moon.aza.dto.SignUpForm;
