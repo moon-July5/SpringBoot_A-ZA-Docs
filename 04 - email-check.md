@@ -270,7 +270,7 @@ public class MemberController {
   ...생략
 ```
 역시 design 측면은 부트스트랩을 이용하였습니다.  
-여기서 `thymeleaf` 문법인 `th:if`를 이용하여 error가 존재 유무에 따라 나오는 내용이 다릅니다.  
+여기서 `thymeleaf` 문법인 `th:if`를 이용하여 error의 존재 유무에 따라 나오는 내용이 다릅니다.  
 에러가 존재하면 에러메시지가 출력되고 존재하지 않으면 회원가입 축하메시지가 출력이 됩니다.  
 이제 결과를 확인해 보겠습니다.  
 
@@ -279,7 +279,7 @@ public class MemberController {
 자신이 `application.properties`에서 설정한 이메일로 전송된 것을 확인할 수 있습니다.  
 ![email-1](https://user-images.githubusercontent.com/60730405/157884622-112a7159-664c-4e87-9656-7d75dac25be3.JPG)  
 
-이제 `이메일 인증 하기`를 클릭하게 되면 아래와 같은 이미지처럼 이메일 인증이 완료됩니다.  
+이제 `이메일 인증 하기`를 클릭하게 되면 아래와 같은 이미지처럼 이메일 인증이 완료되었다는 메시지가 출력되는 페이지로 이동하게 됩니다.   
 ![email-2](https://user-images.githubusercontent.com/60730405/157884929-f437fe63-2740-483b-8cb6-7c86f84d926a.JPG)  
 
 만약, 계정정보가 없거나 인증 토큰이 일치하지 않으면 아래와 같이 에러 메시지가 출력이 됩니다.  
