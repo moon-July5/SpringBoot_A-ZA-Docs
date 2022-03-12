@@ -286,6 +286,8 @@ public class MemberController {
 ![email-3](https://user-images.githubusercontent.com/60730405/157885243-3ca1cba1-e366-4cd4-95b5-bed60ff7f526.JPG)  
 
 ***
-다음에는 자동로그인과 이메일 인증 메시지를 재전송하는 기능을 구현해보겠습니다.  
+다음에는 이메일 재전송 기능을 구현하기 전에 회원가입 후 자동 로그인 기능과   
+로그인된 상태에서 사용자 정보를 참조하는 애너테이션을 작성해보도록 하겠습니다.  
+
 
 
