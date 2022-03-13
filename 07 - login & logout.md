@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 `formLogin()`을 설정하여 form 기반 인증을 지원하도록 합니다. `.loginPage()`를 지정하지 않으면 Spring이 기본 로그인 페이지를 설정해줍니다.  
-`.permitAll()`를 지정하여 로그인 페이지에 누구든지 접근할 수 있도록 합니다.  
+`.permitAll()`를 지정하여 로그인 페이지에 누구든지 접근할 수 있도록 합니다.    
 `logout()`을 이용하여 로그아웃을 설정합니다.  
 로그아웃 설정 중에서 `.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))`을 지정하여 `/logout` 경로에 요청이 가면  
 로그아웃이 되도록 설정했으며, `.logoutSuccessUrl("/")`으로 로그아웃 성공 시 홈 화면으로 이동하도록 했습니다.  
