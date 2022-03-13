@@ -136,7 +136,35 @@ public class MemberController {
 ```
 `@PostMapping`은 `post`방식으로 `RequestMapping`을 하며 `/member/signup` 경로로 요청 시, 회원가입을 처리하게 됩니다.  
 `SignUpForm` 객체에는 회원의 정보가 저장되어 있으며, 이를 나중에 구현할 `Service` 계층인 `MemberService`에서 `signUp()` 메서드로 회원가입을 처리하게 됩니다.  
-다음은 `Service` 계층인 `MemberService`를 구현해 보겠습니다.  
+## SecurityConfig 구현  
+`serivce` 계층을 구현하기 전에 `PasswordEncoder`를 주입해야 합니다.  
+```java
+package com.moon.aza.config;
+
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    // 생략
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder(); 
+    }
+}
+```
+기본 encoder를 Bean으로 등록해줍니다.  
 
 ## 회원가입 처리(MemberService) 구현
 `Service` 계층은 `Controller` 계층과 그 다음에 구현할 `Repository` 계층을 연결하는 역할을 합니다.  
