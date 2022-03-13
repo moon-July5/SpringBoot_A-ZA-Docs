@@ -141,7 +141,8 @@ public class MemberController {
 ```java
 package com.moon.aza.config;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -152,8 +153,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration
+@Log4j2
+@RequiredArgsConstructor
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // 생략
