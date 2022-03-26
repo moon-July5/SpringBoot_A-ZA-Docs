@@ -278,4 +278,5 @@ public class BoardController {
   
  (이미지 업로드 창)
  ![ckeditor-4](https://user-images.githubusercontent.com/60730405/160229010-80229b92-9d1e-4b52-ad52-aeb50479e51b.JPG)
-
+***
+다음은 게시판 글을 작성하는 기능에 대해 구현해 보겠습니다.
