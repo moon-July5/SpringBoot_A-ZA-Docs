@@ -118,7 +118,7 @@ public class BoardController {
 글 작성 페이지에서 내용을 입력 후 등록하기 버튼을 눌러 저장합니다.  
 ![board-register-1](https://user-images.githubusercontent.com/60730405/160242673-d66e9619-3e33-46bd-8feb-32e494fb9a98.JPG)
 
-Database에 저장되어있는지 확인합니다. (저 같은 경우는 MySQL을 사용했기 때문에 **MySQL Workbench**를 통해 확인합니다.)  
+Database에 저장되어있는지 확인합니다. (저 같은 경우는 MySQL을 사용했기 때문에 **MySQL Workbench**를 통해 확인.)  
 ![board-register-2](https://user-images.githubusercontent.com/60730405/160242677-e2182aea-9a4a-4e1e-93ae-81cc5bbc7df4.JPG)
 ![board-register-3](https://user-images.githubusercontent.com/60730405/160242681-e79ae360-2fbe-484a-b0bb-3e568d4091b4.JPG)
 
