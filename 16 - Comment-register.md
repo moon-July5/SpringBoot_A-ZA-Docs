@@ -165,7 +165,7 @@ public class CommentController {
 ```
 `등록(commentSave)` 버튼을 클릭하면 `게시글의 번호(boardId)`, `사용자 번호(memberId)`, `댓글 내용(text)`을 `JSON` 형태의 데이터로  
 `Post` 타입으로 만들어서 비동기 통신인 `ajax`로 전송하게 합니다. `경로(url)`는 아까 `CommentController`에서 구현한 `@PostMapping` 주소를 저정합니다.    
-만약 전송이 성공하면 `self.location.reload()`를 이용하여 URL을 다시 호출합니다. 이를 통해서 나중에 구현할 `댓글 목록`이 변화여 갱신하게 됩니다.  
+만약 전송이 성공하면 `self.location.reload()`를 이용하여 URL을 다시 호출합니다. 이를 통해서 나중에 구현할 `댓글 목록`이 변화하여 갱신하게 됩니다.  
 
 이제 댓글이 정상적으로 Database의 `comment` 테이블에 저장되는지 확인해 보도록 하겠습니다.  
 
