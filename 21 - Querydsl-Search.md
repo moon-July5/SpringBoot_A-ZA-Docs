@@ -99,7 +99,7 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport
 객체지향 쿼리 언어입니다. JPQL은 관계형 데이터베이스의 엔티티에 대한 쿼리를 만드는데 사용됩니다.  
 
 왜 `JPQL`을 사용했냐면 `JPA`는 Entity 객체를 중심으로 개발하므로 SQL을 사용하지 않습니다. 하지만 검색쿼리를 사용할 때는 SQL을 사용해야 합니다.  
-그리고 SQL의 영향을 받아 SQL과 비슷하나, DB 테이블에 직접 접근하는 것이 아닌 `JPA` Entity에 동작한다. 
+그리고 SQL의 영향을 받아 SQL과 비슷하나, DB 테이블에 직접 접근하는 것이 아닌 `JPA` Entity에 동작합니다.   
 그래서 `JPQL`의 쿼리에는 테이블이 아닌 Entity에서 사용되는 컬럼의 이름을 사용해야 합니다.  
 
 * **SQL** : 데이터베이스 테이블을 대상으로 쿼리 
