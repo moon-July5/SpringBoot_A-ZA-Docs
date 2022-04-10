@@ -111,6 +111,7 @@ public class Member extends BaseEntity {
 이제 `MemberService`에 `닉네임(Nickname)`을 변경하도록 구현합니다.  
 
 ## MemberService 구현
+```java
 package com.moon.aza.service;
 
 import com.moon.aza.dto.SignUpForm;
@@ -158,6 +159,7 @@ public class MemberService implements UserDetailsService {
     
   ...생략
 }
+```
 
 `Member` Entity에 구현한 `changeNickname()` 메서드를 호출하여 `닉네임(Nickname)` 필드를 변경합니다.  
 그리고 수정된 필드를 `MemberRepository`에 저장합니다.  
