@@ -506,8 +506,7 @@ public class BoardService {
     </th:block>
 </html>
 ```
-일단 추천 버튼에 `Thymeleaf` 문법으로 `th:classappend="${likes ? 'btn-danger' : 'btn-outline-danger'}"`로 boolean 형태의 데이터인 `likes`가 **true**면  
-이미 현재 사용자가 눌렀다는 의미이니 `Bootstrap`의 버튼 디자인을 빨간색으로 채워진 버튼으로 바꾸도록 class 속성을 추가합니다.  
+일단 추천 버튼에 `Thymeleaf` 문법으로 `th:classappend="${likes ? 'btn-danger' : 'btn-outline-danger'}"`로 boolean 형태의 데이터인 `likes`가 **true**면 이미 현재 사용자가 눌렀다는 의미이니 `Bootstrap`의 버튼 디자인을 빨간색으로 채워진 버튼으로 바꾸도록 class 속성을 추가합니다.  
 **false**면 현재 사용자는 안눌렀다는 의미이니 버튼 디자인을 겉에만 빨간 테두리로 바꾸도록 class 속성을 추가합니다.  
 
 그리고 `Javascript`의 `JQuery`로 비동기 통신인 `Ajax`를 이용하여 추천버튼을 눌렀을 때, `/board/{게시글번호}/likes`로 요청하도록 합니다.  
