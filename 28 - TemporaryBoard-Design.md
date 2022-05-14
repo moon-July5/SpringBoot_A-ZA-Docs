@@ -187,11 +187,12 @@ public class BoardForm {
                             break;
                     }
                 });
+           });
         </script>  
     </th:block>
 </html>
 ```
 
 ***
-지금까지 `temporaryBoard`와 `임시등록` 버튼 및 모달창을 구현해 했습니다. 
+지금까지 `temporaryBoard`와 `임시등록` 버튼 및 모달창을 구현해 했습니다.   
 다음에는 게시물을 임시등록하여 Database에 등록하는 기능을 구현해 보겠습니다.
