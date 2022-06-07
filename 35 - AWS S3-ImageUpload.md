@@ -76,7 +76,7 @@ public class AwsS3Service {
 이러한 에러로 정말 며칠동안 뭐가 문제인지 잘 몰라서 해맸습니다. 그래서 위의 방식대로 했더니 정상적으로 동작이 됐습니다.  
 아직 부족하다는 의미인 것 같아 더 공부해야 할 것 같습니다.  
 
-## AwsS3Service 구현 - 2
+## AwsS3Service 구현 - 2 (X)
 ```java
  public String upload(MultipartFile multipartFile, String saveName) throws IOException {
         File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일변환실패"));
@@ -133,6 +133,117 @@ public class AwsS3Service {
 로컬에 있는 이미지 파일을 삭제시켜주는 역할을 합니다.  
 
 다음은 구현한 이 `AwsS3Service`를 `UploadController`에서 호출하도록 구현합니다.  
+
+**수정**
+위와 같이 하게되면 문제점이 하나 있습니다.  
+
+로컬에서 정상적으로 동작하는 것을 확인 후, 당연히 EC2 서버에서도 돌아갈 것이라 생각하고 이미지를 업로드 했지만  
+
+`File에 대한 IOExceiption : permission denied` 에러가 발생합니다.  
+
+왜냐하면 `convertFile.createNewFile()` 코드로 인해 프로젝트 내에 이미지를 업로드 먼저 하고  
+
+AWS S3 버킷 안에 이미지가 업로드되고 공간 낭비를 해소하기 위해 프로젝트 내에 이미지를 삭제하는 절차를 가집니다.  
+
+프로젝트 내에 이미지를 저장하는데 EC2 서버 내에서는 접근이 거부되서 아예 MultipartFile 형식을 File 형식으로 변환할 수 없고  
+
+그렇게 되면 업로드가 되지 않아 발생하는 문제입니다.  
+
+그렇기 때문에 바로 AWS S3으로 전달하여 업로드하도록 해야합니다.  
+
+그러한 것을 해주는 `putObject(new PutObjectRequest())` 메서드를 조금 수정하면 됩니다.  
+
+수정된 코드는 아래와 같습니다.  
+
+## AwsS3Service 구현 - 3 (O)
+```java
+package com.moon.aza.service;
+
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+
+@Log4j2
+@RequiredArgsConstructor
+@Service
+public class AwsS3Service {
+    private AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    @Value("${cloud.aws.credentials.accessKey}")
+    private String accessKey;
+
+    @Value("${cloud.aws.credentials.secretKey}")
+    private String secretKey;
+
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
+    @PostConstruct
+    public void setS3Client() {
+        AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
+
+        amazonS3 = AmazonS3ClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion(this.region)
+                .build();
+    }
+
+    public String upload(MultipartFile multipartFile, String saveName) throws IOException {
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(multipartFile.getContentType());
+        metadata.setContentLength(multipartFile.getSize());
+
+        String uploadImageUrl = putS3(multipartFile, saveName, metadata);
+        log.info("uploadImageUrl : "+uploadImageUrl);
+
+        return uploadImageUrl;
+    }
+
+    private String putS3(MultipartFile uploadFile, String saveName, ObjectMetadata metadata) throws IOException {
+        try {
+            amazonS3.putObject(new PutObjectRequest(bucket, saveName,
+                    uploadFile.getInputStream(), metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead)
+            );
+        } catch (IOException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드 실패");
+        }
+        return amazonS3.getUrl(bucket, saveName).toString();
+    }
+}
+
+```
+여기서 `convert()` 메서드와 `removeNewFile()` 메서드가 없어도 좋습니다.  
+
+수정할 곳은 S3에 업로드하는 `putS3()` 메서드에 `ObjectMetadata` 객체를 추가합니다.  
+
+그리고 MultipartFile 형식의 파일을 읽어오는 `getInputStream()` 메서드를 사용합니다.  
+
+수정은 여기까지 하면되며, 오히려 코드가 전보다 간결해진 것을 확인할 수 있습니다.  
+
+이 에러로 인해 정말 며칠동안 파악하고 해결하느라 시간을 너무 많이 소비했습니다.  
+그래도 얻어간 것이 있어 다행입니다.  
+
 
 ## UploadController 구현
 ```java
